@@ -144,16 +144,14 @@ window.addEventListener ('load', () => {
     function payIsValid() {
         if (payMethod.value == 'select method') {
             return false;
-        }
-        if (payMethod.value == 'paypal' || payMethod.value == 'bitcoin') {
-            return true;
-        }
-        if (payMethod.value == 'credit-card') {
+        } else if (payMethod.value == 'credit-card') {
             if (cardIsValid() && zipIsValid() && cvvIsValid()) {
                 return true;
             } else {
                 return false;
             }
+        } else {
+            return true;
         }
     }
 
@@ -185,16 +183,14 @@ window.addEventListener ('load', () => {
             testForError(emailIsValid(), email.parentElement);
             testForError(activitiesIsValid(), activities);
 
-            if (!payIsValid()) {
-                if (payMethod.value == 'select method') {
-                    testForError(payIsValid(), payMethod.parentElement);
-                }
-                if (payMethod.value == 'credit-card') {
-                    testForError(payIsValid(), payMethod.parentElement.parentElement.parentElement);
-                    testForError(cardIsValid(), cardNumber.parentElement);
-                    testForError(zipIsValid(), zipCode.parentElement);
-                    testForError(cvvIsValid(), cvv.parentElement);
-                }
+            if (payMethod.value == 'select method') {
+                testForError(payIsValid(), payMethod.parentElement);
+            }
+            if (payMethod.value == 'credit-card') {
+                testForError(true, payMethod.parentElement);
+                testForError(cardIsValid(), cardNumber.parentElement);
+                testForError(zipIsValid(), zipCode.parentElement);
+                testForError(cvvIsValid(), cvv.parentElement);
             }
         }
     });
