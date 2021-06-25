@@ -1,10 +1,10 @@
 window.addEventListener ('load', () => {
 
-// set name field to focus on page load
+// Set name field to focus on page load
     const name = document.querySelector('#name');
     name.focus();
 
-// hide input for other job role until its selected
+// Hide input for other job role until its selected
     const otherJobRole = document.querySelector('#other-job-role');
     otherJobRole.style.display = 'none';
 
@@ -17,7 +17,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// t-shirt design selection controls options that appear for color selection
+// T-Shirt design selection controls options that appear for color selection
     const shirtColor = document.querySelector('#color');
     shirtColor.disabled = true;
     
@@ -27,9 +27,8 @@ window.addEventListener ('load', () => {
         const colors = shirtColor.children;
         
         /**
-         * this function updates the color options list based on design choice
-         * 
-         * @param {string} design - the design that has been chosen
+         * This function updates the option elements in the "Color" select menu based on design choice
+         * @param {string} design - the chosen option from the "Design" dropdown
          */
         function colorsList(design) {
             let firstLoop = true;
@@ -56,7 +55,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// update price in "Register for Activities" section
+// Update price in "Register for Activities" section
     const activities = document.querySelector('#activities');
     let totalDisplay = document.querySelector('#activities-cost');
     let cost = 0;
@@ -72,29 +71,102 @@ window.addEventListener ('load', () => {
         }
     });
 
-// payment info section display based on selection
+// Payment info section display based on selection
     const payMethod = document.querySelector('#payment');
-    const payCredit = document.querySelector('#credit-card');
-    const payPaypal = document.querySelector('#paypal');
-    const payBitcoin = document.querySelector('#bitcoin');
+    const creditInfo = document.querySelector('#credit-card');
+    const paypalInfo = document.querySelector('#paypal');
+    const bitcoinInfo = document.querySelector('#bitcoin');
 
-    payPaypal.style.display = 'none';
-    payBitcoin.style.display = 'none';
+    paypalInfo.style.display = 'none';
+    bitcoinInfo.style.display = 'none';
 
     payMethod.addEventListener('change', () => {
         if (payMethod.value == 'credit-card' ) {
-            payCredit.style.display = '';
-            payPaypal.style.display = 'none';
-            payBitcoin.style.display = 'none'
+            creditInfo.style.display = '';
+            paypalInfo.style.display = 'none';
+            bitcoinInfo.style.display = 'none'
         }if (payMethod.value == 'paypal') {
-            payCredit.style.display = 'none';
-            payPaypal.style.display = '';
-            payBitcoin.style.display = 'none';
+            creditInfo.style.display = 'none';
+            paypalInfo.style.display = '';
+            bitcoinInfo.style.display = 'none';
         }
         if (payMethod.value == 'bitcoin' ) {
-            payCredit.style.display = 'none';
-            payPaypal.style.display = 'none';
-            payBitcoin.style.display = ''
+            creditInfo.style.display = 'none';
+            paypalInfo.style.display = 'none';
+            bitcoinInfo.style.display = ''
+        }
+    });
+
+// Form validation helper functions
+    const form = document.getElementsByTagName('form')[0];
+    
+    /**
+     *  Helper function for checking "Name" field validity
+     *  @return {boolean} whether or not name field is blank
+     */
+    function nameIsValid() {
+        return /[a-z]+/i.test(name.value);
+    }
+    /**
+     *  Helper function for checking "Email Address"" validity
+     *  @return {boolean} whether or not the email is formatted properly 
+     */
+    function emailIsValid() {
+        const email = document.querySelector('#email');
+        return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email.value);
+    }
+    /**
+     *  Helper function for checking "Register for Activities" validity
+     *  @return {boolean} whether or not any of the checkboxes in the section are checked 
+     */
+    function activitiesIsValid() {
+        const checkboxes = activities.querySelectorAll('[type="checkbox"]');
+        let selectionMade = false;
+        for (let i=0; i<checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectionMade = true;
+            }
+        }
+        return selectionMade;
+    }
+    /**
+     *  Helper function for checking "Payment Info" for credit card payments validity 
+     *  @return {boolean} whether or not correct number of digits have been entered in each field
+     */
+    function payIsValid() {
+        const cardNumber = document.querySelector('#cc-num');
+        const cardIsValid = /^\d{13,16}$/.test(cardNumber.value);
+        const zipCode = document.querySelector('#zip');
+        const zipIsValid = /^\d{5}$/.test(zipCode.value)
+        const cvv = document.querySelector('#cvv');
+        const cvvIsValid = /^\d{3}$/.test(cvv.value);
+
+        if (cardIsValid && zipIsValid && cvvIsValid) {
+            return true;
+        } else {
+            return false;
+        } 
+    };
+
+// Form submit event handler with form validation
+    form.addEventListener('submit', (e) => {
+        if (nameIsValid() && emailIsValid() && activitiesIsValid()){
+            if (payMethod.value == 'credit-card') {
+                if (payIsValid()) {
+                    //submit form successfully
+                } else {
+                    e.preventDefault();
+                    console.log('name, email and activities are valid but pay is not');
+                }
+            } else if (payMethod.value == 'paypal' || payMethod.value =='bitcoin') {
+                //submit form successfully
+            } else {
+                e.preventDefault();
+                console.log('name, email and activities are valid BUT pay has not been selected');
+            }
+        } else {
+            e.preventDefault();
+            console.log(`Error, valid items= Name:${nameIsValid()}, email:${emailIsValid()}, activities:${activitiesIsValid()}`);
         }
     });
 });
