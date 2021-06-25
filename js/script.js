@@ -73,27 +73,27 @@ window.addEventListener ('load', () => {
 
 // Payment info section display based on selection
     const payMethod = document.querySelector('#payment');
-    const creditInfo = document.querySelector('#credit-card');
-    const paypalInfo = document.querySelector('#paypal');
-    const bitcoinInfo = document.querySelector('#bitcoin');
+    const creditSection = document.querySelector('#credit-card');
+    const paypalSection = document.querySelector('#paypal');
+    const bitcoinSection = document.querySelector('#bitcoin');
 
-    paypalInfo.style.display = 'none';
-    bitcoinInfo.style.display = 'none';
+    paypalSection.style.display = 'none';
+    bitcoinSection.style.display = 'none';
 
     payMethod.addEventListener('change', () => {
         if (payMethod.value == 'credit-card' ) {
-            creditInfo.style.display = '';
-            paypalInfo.style.display = 'none';
-            bitcoinInfo.style.display = 'none'
+            creditSection.style.display = '';
+            paypalSection.style.display = 'none';
+            bitcoinSection.style.display = 'none'
         }if (payMethod.value == 'paypal') {
-            creditInfo.style.display = 'none';
-            paypalInfo.style.display = '';
-            bitcoinInfo.style.display = 'none';
+            creditSection.style.display = 'none';
+            paypalSection.style.display = '';
+            bitcoinSection.style.display = 'none';
         }
         if (payMethod.value == 'bitcoin' ) {
-            creditInfo.style.display = 'none';
-            paypalInfo.style.display = 'none';
-            bitcoinInfo.style.display = ''
+            creditSection.style.display = 'none';
+            paypalSection.style.display = 'none';
+            bitcoinSection.style.display = ''
         }
     });
 
@@ -131,83 +131,101 @@ window.addEventListener ('load', () => {
     }
     /**
      *  Helper function for checking "Payment Info" for credit card payments validity 
+     *      the variables have been pulled out for later access
+     * 
      *  @return {boolean} whether or not correct number of digits have been entered in each field
      */
+    const cardNumber = document.querySelector('#cc-num');
+    const cardIsValid = /^\d{13,16}$/.test(cardNumber.value);
+    const zipCode = document.querySelector('#zip');
+    const zipIsValid = /^\d{5}$/.test(zipCode.value)
+    const cvv = document.querySelector('#cvv');
+    const cvvIsValid = /^\d{3}$/.test(cvv.value);
     function payIsValid() {
-        const cardNumber = document.querySelector('#cc-num');
-        const cardIsValid = /^\d{13,16}$/.test(cardNumber.value);
-        const zipCode = document.querySelector('#zip');
-        const zipIsValid = /^\d{5}$/.test(zipCode.value)
-        const cvv = document.querySelector('#cvv');
-        const cvvIsValid = /^\d{3}$/.test(cvv.value);
-
-        if (cardIsValid && zipIsValid && cvvIsValid) {
-            return true;
-        } else {
+        console.log(cardNumber.value +' '+ zipCode.value +' '+ cvv.value);
+        console.log(cardIsValid +' '+ zipIsValid +' '+ cvvIsValid);
+        if (payMethod.value == 'credit-card') {
+            if (cardIsValid && zipIsValid && cvvIsValid) {
+                return true;
+            } else {
+                return false;
+            } 
+        } else if (payMethod.value == 'select method') {
             return false;
-        } 
+        } else {
+            return true;
+        }
     };
 
 // Error indicator helper functions
     /**
-     *  Helper function for notifying user of error in form element input
+     *  Helper function for notifying user of error in form element 
      *  @param {string} element - the form element that has invalid input
      */
     function errorNotify(element) {
-        element.className = 'not-valid';
-        //element.removeAttribute('class', 'valid');
+        element.classList.add('not-valid');
+        element.classList.remove('valid');
         element.lastElementChild.style.display = 'inherit';
     }
 
     /**
-     *  Helper function for notifying user of error in form element input
+     *  Helper function for removing error notification from form element 
      *  @param {string} element - the form element that has invalid input
      */
     function errorResolved(element) {
-        element.removeAttribute('class', 'not-valid');
+        element.classList.remove('not-valid');
+        element.classList.add('valid');
         element.lastElementChild.style.display = 'none';
     }
 
 // Form submit event handler with form validation AND error notifications
     form.addEventListener('submit', (e) => {
-        if (nameIsValid() && emailIsValid() && activitiesIsValid()){
-            if (payMethod.value == 'credit-card') {
-                if (payIsValid()) {
-                    // Submit form successfully
-                } else {
-                    e.preventDefault();
-                    payMethod.parentElement.parentElement.className = 'not-valid';
-                    console.log('name, email and activities are valid but pay is not');
-                }
-            } else if (payMethod.value == 'paypal' || payMethod.value =='bitcoin') {
-                // Submit form successfully
-            } else {
-                e.preventDefault();
-                console.log(payMethod.parentElement.parentElement);
-                console.log('name, email and activities are valid BUT pay has not been selected');
-            }
+        if (nameIsValid() && emailIsValid() && activitiesIsValid() && payIsValid()) {
+            // Submit form successfully
         } else {
             e.preventDefault();
-            
+
             if (!nameIsValid()) {
-                console.log('name is invalid');
                 errorNotify(name.parentElement);
             } else {
                 errorResolved(name.parentElement);
             }
             
             if (!emailIsValid()) {
-                console.log('email is invalid');
                 errorNotify(email.parentElement);
             } else {
                 errorResolved(email.parentElement);
             }
             
             if (!activitiesIsValid()) {
-                console.log('activities is invalid');
                 errorNotify(activities);
             } else {
                 errorResolved(activities);
+            }
+
+            if (!payIsValid()) {
+                if (payMethod.value == 'credit-card') {
+                    //console.log(cardIsValid +' '+ zipIsValid +' '+ cvvIsValid);
+                    if (!cardIsValid) {
+                        errorNotify(cardNumber.parentElement);
+                    } else {
+                        errorResolved(cardNumber.parentElement);
+                    }
+                    if (!zipIsValid) {
+                        errorNotify(zipCode.parentElement);
+                    } else {
+                        errorResolved(zipCode.parentElement);
+                    }
+                    if (!cvvIsValid) {
+                        errorNotify(cvv.parentElement);
+                    } else {
+                        errorResolved(cvv.parentElement);
+                    }
+                } else if (payMethod.value == 'select method') {
+                    errorNotify(payMethod.parentElement);
+                } else {
+                    errorResolved(payMethod.parentElement);
+                }
             }
         }
     });
