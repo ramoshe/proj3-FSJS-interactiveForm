@@ -148,25 +148,78 @@ window.addEventListener ('load', () => {
         } 
     };
 
-// Form submit event handler with form validation
+// Error indicator helper functions
+    /**
+     *  Helper function for notifying user of error in form element input
+     *  @param {string} element - the form element that has invalid input
+     */
+    function errorNotify(element) {
+        element.className = 'not-valid';
+        //element.removeAttribute('class', 'valid');
+        element.lastElementChild.style.display = 'inherit';
+    }
+
+    /**
+     *  Helper function for notifying user of error in form element input
+     *  @param {string} element - the form element that has invalid input
+     */
+    function errorResolved(element) {
+        element.removeAttribute('class', 'not-valid');
+        element.lastElementChild.style.display = 'none';
+    }
+
+// Form submit event handler with form validation AND error notifications
     form.addEventListener('submit', (e) => {
         if (nameIsValid() && emailIsValid() && activitiesIsValid()){
             if (payMethod.value == 'credit-card') {
                 if (payIsValid()) {
-                    //submit form successfully
+                    // Submit form successfully
                 } else {
                     e.preventDefault();
+                    payMethod.parentElement.parentElement.className = 'not-valid';
                     console.log('name, email and activities are valid but pay is not');
                 }
             } else if (payMethod.value == 'paypal' || payMethod.value =='bitcoin') {
-                //submit form successfully
+                // Submit form successfully
             } else {
                 e.preventDefault();
+                console.log(payMethod.parentElement.parentElement);
                 console.log('name, email and activities are valid BUT pay has not been selected');
             }
         } else {
             e.preventDefault();
-            console.log(`Error, valid items= Name:${nameIsValid()}, email:${emailIsValid()}, activities:${activitiesIsValid()}`);
+            
+            if (!nameIsValid()) {
+                console.log('name is invalid');
+                errorNotify(name.parentElement);
+            } else {
+                errorResolved(name.parentElement);
+            }
+            
+            if (!emailIsValid()) {
+                console.log('email is invalid');
+                errorNotify(email.parentElement);
+            } else {
+                errorResolved(email.parentElement);
+            }
+            
+            if (!activitiesIsValid()) {
+                console.log('activities is invalid');
+                errorNotify(activities);
+            } else {
+                errorResolved(activities);
+            }
         }
     });
+
+// Accessibility - make focus states of "Activities" more obvious
+    const checkboxes = activities.querySelectorAll('[type="checkbox"]');
+    for (let i=0; i<checkboxes.length; i++) {
+        checkboxes[i].addEventListener('focus', (e) => {
+            checkboxes[i].parentElement.className = 'focus';
+        })
+        checkboxes[i].addEventListener('blur', (e) => {
+            checkboxes[i].parentElement.removeAttribute('class', 'focus')
+        })
+    }
 });
