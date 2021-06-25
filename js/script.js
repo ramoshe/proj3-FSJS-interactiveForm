@@ -80,7 +80,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// Payment info section display based on selection
+// Payment info section change display based on selection
     const payMethod = document.querySelector('#payment');
     const creditSection = document.querySelector('#credit-card');
     const paypalSection = document.querySelector('#paypal');
@@ -106,7 +106,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// Elements for form validation
+// Elements for form validation (some have already been called above)
     const form = document.getElementsByTagName('form')[0];
     const email = document.querySelector('#email');
     const cardNumber = document.querySelector('#cc-num');
