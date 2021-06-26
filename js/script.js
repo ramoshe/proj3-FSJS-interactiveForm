@@ -11,8 +11,9 @@ window.addEventListener ('load', () => {
     const shirtColor = document.querySelector('#color');
     const colors = shirtColor.children;
     
-    const activities = document.querySelector('#activities');
-    const checkboxes = activities.querySelectorAll('[type="checkbox"]');
+    const activitySection = document.querySelector('#activities');
+    const activities = activitySection.getElementsByTagName('label');
+    const checkboxes = activitySection.querySelectorAll('[type="checkbox"]');
     const totalDisplay = document.querySelector('#activities-cost');
    
     const payMethod = document.querySelector('#payment');
@@ -81,7 +82,7 @@ window.addEventListener ('load', () => {
 
 // Update price in "Register for Activities" section
     let cost = 0;
-    activities.addEventListener('change', (e) => {
+    activitySection.addEventListener('change', (e) => {
         if (e.target.tagName == 'INPUT') {
             if (e.target.checked) {
                 cost += parseInt(e.target.dataset.cost);
@@ -122,9 +123,10 @@ window.addEventListener ('load', () => {
         return /[a-z]+/i.test(name.value);
     }
     function emailIsValid() {
+        emailErrorSet(); // extra credit feature, see at bottom of file
         return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email.value);
     }
-    function activitiesIsValid() {
+    function activityIsValid() {
         let selectionMade = false;
         for (let i=0; i<checkboxes.length; i++) {
             if (checkboxes[i].checked) {
@@ -159,9 +161,10 @@ window.addEventListener ('load', () => {
 // Error notifications for invalid form entries
     /**
      *  Helper function for notifying user of error in form element 
+     *  @param {function} validityCheck - the function that checks the element's validity
      *  @param {string} element - the form element that has invalid input
      */
-    function testForError(validityCheck, element) {
+    function errorNotify(validityCheck, element) {
         if (!validityCheck) {
             element.classList.add('not-valid');
             element.classList.remove('valid');
@@ -175,24 +178,65 @@ window.addEventListener ('load', () => {
 
 // Submit event handler with form validation AND error notifications
     form.addEventListener('submit', (e) => {
-        if (nameIsValid() && emailIsValid() && activitiesIsValid() && payIsValid()) {
+        if (nameIsValid() && emailIsValid() && activityIsValid() && payIsValid()) {
             // Submit form successfully
         } else {
             e.preventDefault();
 
-            testForError(nameIsValid(), name.parentElement);
-            testForError(emailIsValid(), email.parentElement);
-            testForError(activitiesIsValid(), activities);
+            errorNotify(nameIsValid(), name.parentElement);
+            errorNotify(emailIsValid(), email.parentElement);
+            errorNotify(activityIsValid(), activitySection);
 
             if (payMethod.value == 'select method') {
-                testForError(payIsValid(), payMethod.parentElement);
+                errorNotify(payIsValid(), payMethod.parentElement);
             }
             if (payMethod.value == 'credit-card') {
-                testForError(true, payMethod.parentElement);
-                testForError(cardIsValid(), cardNumber.parentElement);
-                testForError(zipIsValid(), zipCode.parentElement);
-                testForError(cvvIsValid(), cvv.parentElement);
+                errorNotify(true, payMethod.parentElement);
+                errorNotify(cardIsValid(), cardNumber.parentElement);
+                errorNotify(zipIsValid(), zipCode.parentElement);
+                errorNotify(cvvIsValid(), cvv.parentElement);
             }
         }
     });
+
+// * * * * * * * * * * * * * * EXTRA CREDIT * * * * * * * * * * * * * *
+
+// Prevent users from registering for conflicting activities
+    for (let i=1; i<checkboxes.length; i++) {
+        checkboxes[i].addEventListener('change', (e) => {
+            let selectedActivity = e.target.parentElement;
+            let selectedBox = e.target;
+            let selectedTime = selectedActivity.querySelector('.activity-time').textContent;
+            for (let i=1; i<activities.length; i++) {
+                let activityTime = activities[i].querySelector('.activity-time').textContent;
+                let activityBox = activities[i].querySelector('input');
+                if (activities[i] !== selectedActivity) {
+                    if (selectedBox.checked == true){
+                        if (selectedTime == activityTime) {
+                            activities[i].classList.add('disabled');
+                            activityBox.disabled = true;
+                        }
+                    } else {
+                        activities[i].classList.remove('disabled');
+                        activityBox.disabled = false;
+                    }
+                }
+            }
+        });
+    }
+    
+// Real-time error messages
+    name.addEventListener('input', () => {
+        errorNotify(nameIsValid(), name.parentElement);
+    });
+
+// Conditional error message
+    function emailErrorSet() {
+        let emailError = email.nextElementSibling;
+        if (/.*/.test(email.value)) {
+            emailError.textContent = 'Email field cannot be blank';
+        } else {
+            emailError.textContent = 'Email address must be formatted correctly';
+        } 
+    }    
 });
