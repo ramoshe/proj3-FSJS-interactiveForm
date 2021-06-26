@@ -1,14 +1,34 @@
 window.addEventListener ('load', () => {
+// Variables for form sections and inputs
+    const form = document.getElementsByTagName('form')[0];
+    
+    const name = document.querySelector('#name');
+    const email = document.querySelector('#email');
+    const jobRole = document.querySelector('#title')
+    const otherJobRole = document.querySelector('#other-job-role');
+    
+    const shirtDesign = document.querySelector('#design');
+    const shirtColor = document.querySelector('#color');
+    const colors = shirtColor.children;
+    
+    const activities = document.querySelector('#activities');
+    const checkboxes = activities.querySelectorAll('[type="checkbox"]');
+    const totalDisplay = document.querySelector('#activities-cost');
+   
+    const payMethod = document.querySelector('#payment');
+    const creditSection = document.querySelector('#credit-card');
+    const paypalSection = document.querySelector('#paypal');
+    const bitcoinSection = document.querySelector('#bitcoin');
+
+    const cardNumber = document.querySelector('#cc-num');
+    const zipCode = document.querySelector('#zip');
+    const cvv = document.querySelector('#cvv');
 
 // Set name field to focus on page load
-    const name = document.querySelector('#name');
     name.focus();
 
 // Hide input for other job role until its selected
-    const otherJobRole = document.querySelector('#other-job-role');
     otherJobRole.style.display = 'none';
-
-    const jobRole = document.querySelector('#title')
     jobRole.addEventListener('change', (e) => {
         if (e.target.value == 'other') {
             otherJobRole.style.display = '';
@@ -18,13 +38,9 @@ window.addEventListener ('load', () => {
     });
 
 // T-Shirt design selection controls options that appear for color selection
-    const shirtColor = document.querySelector('#color');
-    shirtColor.disabled = true;
-    
-    const shirtDesign = document.querySelector('#design');
+    shirtColor.disabled = true;   
     shirtDesign.addEventListener('change', () => {
         shirtColor.disabled = false;
-        const colors = shirtColor.children;
         /**
          * This function updates the option elements in the "Color" select menu based on design choice
          * @param {string} design - the chosen option from the "Design" dropdown
@@ -54,8 +70,6 @@ window.addEventListener ('load', () => {
     });
 
 // Accessibility - make focus states of "Activities" more obvious
-    const activities = document.querySelector('#activities');
-    const checkboxes = activities.querySelectorAll('[type="checkbox"]');
     for (let i=0; i<checkboxes.length; i++) {
         checkboxes[i].addEventListener('focus', (e) => {
             checkboxes[i].parentElement.className = 'focus';
@@ -66,9 +80,7 @@ window.addEventListener ('load', () => {
     }
 
 // Update price in "Register for Activities" section
-    let totalDisplay = document.querySelector('#activities-cost');
     let cost = 0;
-
     activities.addEventListener('change', (e) => {
         if (e.target.tagName == 'INPUT') {
             if (e.target.checked) {
@@ -81,11 +93,6 @@ window.addEventListener ('load', () => {
     });
 
 // Payment info section change display based on selection
-    const payMethod = document.querySelector('#payment');
-    const creditSection = document.querySelector('#credit-card');
-    const paypalSection = document.querySelector('#paypal');
-    const bitcoinSection = document.querySelector('#bitcoin');
-
     paypalSection.style.display = 'none';
     bitcoinSection.style.display = 'none';
 
@@ -106,13 +113,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// Elements for form validation (some have already been called above)
-    const form = document.getElementsByTagName('form')[0];
-    const email = document.querySelector('#email');
-    const cardNumber = document.querySelector('#cc-num');
-    const zipCode = document.querySelector('#zip');
-    const cvv = document.querySelector('#cvv');
-    
+// Form validation  
     /**
      *  Helper functions for checking each field validity
      *  @return {boolean} whether or not name field is blank
