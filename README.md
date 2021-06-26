@@ -1,5 +1,5 @@
 # proj3-FSJS-interactiveForm
- Project for Unit 2 of the Treehouse Full-Stack JavaScript Techdegree program
+ Project for Unit 3 of the Treehouse Full-Stack JavaScript Techdegree program
 
 
 Extra Credit Features:
