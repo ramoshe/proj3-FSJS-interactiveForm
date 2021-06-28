@@ -233,10 +233,10 @@ window.addEventListener ('load', () => {
 // Conditional error message
     function emailErrorSet() {
         let emailError = email.nextElementSibling;
-        if (/.*/.test(email.value)) {
-            emailError.textContent = 'Email field cannot be blank';
-        } else {
+        if (/.+/.test(email.value)) {
             emailError.textContent = 'Email address must be formatted correctly';
+        } else {
+            emailError.textContent = 'Email field cannot be blank';
         } 
     }    
 });
