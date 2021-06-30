@@ -93,7 +93,7 @@ window.addEventListener ('load', () => {
         }
     });
 
-// Payment info section change display based on selection
+// Payment info section changes based on selection, credit selected as default
     paypalSection.style.display = 'none';
     bitcoinSection.style.display = 'none';
 
@@ -113,6 +113,9 @@ window.addEventListener ('load', () => {
             bitcoinSection.style.display = ''
         }
     });
+
+    const cred = payMethod.querySelector('[value=credit-card]');
+    cred.setAttribute('selected', '');
 
 // Form validation  
     /**
@@ -145,9 +148,7 @@ window.addEventListener ('load', () => {
         return /^\d{3}$/.test(cvv.value);
     }
     function payIsValid() {
-        if (payMethod.value == 'select method') {
-            return false;
-        } else if (payMethod.value == 'credit-card') {
+        if (payMethod.value == 'credit-card') {
             if (cardIsValid() && zipIsValid() && cvvIsValid()) {
                 return true;
             } else {
