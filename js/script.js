@@ -80,11 +80,7 @@ window.addEventListener ('load', () => {
     let cost = 0;
     activitySection.addEventListener('change', (e) => {
         if (e.target.tagName == 'INPUT') {
-            if (e.target.checked) {
-                cost += parseInt(e.target.dataset.cost);
-            } else {
-                cost -= parseInt(e.target.dataset.cost);
-            }
+            (e.target.checked) ? cost += parseInt(e.target.dataset.cost) : cost -= parseInt(e.target.dataset.cost);
             totalDisplay.textContent = `Total: $${cost}`;
         }
     });
@@ -144,11 +140,7 @@ window.addEventListener ('load', () => {
         return /^\d{3}$/.test(cvv.value);
     }
     function payIsValid() {
-        if (payMethod.value == 'credit-card') {
-            return (cardIsValid() && zipIsValid() && cvvIsValid());
-        } else {
-            return true;
-        }
+        (payMethod.value === 'credit-card') ? (cardIsValid() && zipIsValid() && cvvIsValid()) : true;
     }
 
 // Error notifications for invalid form entries
