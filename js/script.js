@@ -12,7 +12,7 @@ window.addEventListener ('load', () => {
     const colors = shirtColor.children;
     
     const activitySection = document.querySelector('#activities');
-    let activities = Array.from(activitySection.getElementsByTagName('label'));
+    const activities = activitySection.getElementsByTagName('label');
     const checkboxes = activitySection.querySelectorAll('[type="checkbox"]');
     const totalDisplay = document.querySelector('#activities-cost');
    
@@ -188,28 +188,36 @@ window.addEventListener ('load', () => {
 
 // Prevent users from registering for conflicting activities  
     checkboxes.forEach(checkbox => checkbox.addEventListener('change', (e) => {
-        let selectedActivity = e.target.parentElement;
-        let selectedBox = e.target;
-        let selectedTime = selectedActivity.querySelector('.activity-time').textContent;
-        activities.forEach((activity, index) => {
-            if (index > 0) {
-                let activityTime = activity.querySelector('.activity-time').textContent;
-                let activityBox = activity.querySelector('input');
-                if (activity !== selectedActivity) {
-                    if (selectedBox.checked){
-                        if (selectedTime == activityTime) {
-                            activity.classList.add('disabled');
-                            activityBox.disabled = true;
-                        }
-                    } else {
-                        activity.classList.remove('disabled');
-                        activityBox.disabled = false;
-                    }
-                }   
-            }
-        });
+        const activityArray = Array.from(activities);
+        activityArray.splice(0, 1); //remove "Main Conference" from activities list
+        const unselectedActivities = activityArray.filter(activity => !activity.querySelector('input').checked);
+        const disabledActivities = activityArray.filter(activity => activity.classList.contains('disabled'));
+  
+        const clickedActivity = e.target.parentElement;
+        const clickedBox = e.target;
+        const clickedTime = clickedActivity.querySelector('.activity-time').textContent;
+        
+        if (clickedBox.checked) {
+            unselectedActivities.forEach(activity => {
+                const activityTime = activity.querySelector('.activity-time').textContent;
+                const activityBox = activity.querySelector('input');
+                if (activityTime === clickedTime) {
+                    activity.classList.add('disabled');
+                    activityBox.disabled = true;
+                } 
+            });
+        } else {
+            disabledActivities.forEach(activity => {
+                const activityTime = activity.querySelector('.activity-time').textContent;
+                const activityBox = activity.querySelector('input');
+                if (activityTime === clickedTime) {
+                    activity.classList.remove('disabled');
+                    activityBox.disabled = false;
+                }
+            });
+        }
     }));
-    
+
 // Real-time error messages
     name.addEventListener('input', () => {
         errorNotify(nameIsValid(), name.parentElement);
