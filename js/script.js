@@ -225,7 +225,7 @@ window.addEventListener ('load', () => {
 
 // Conditional error message
     function emailErrorSet() {
-        let emailError = email.nextElementSibling;
+        const emailError = email.nextElementSibling;
         if (/.+/.test(email.value)) {
             emailError.textContent = 'Email address must be formatted correctly';
         } else {
