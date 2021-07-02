@@ -12,7 +12,7 @@ window.addEventListener ('load', () => {
     const colors = shirtColor.children;
     
     const activitySection = document.querySelector('#activities');
-    const activities = activitySection.getElementsByTagName('label');
+    let activities = Array.from(activitySection.getElementsByTagName('label'));
     const checkboxes = activitySection.querySelectorAll('[type="checkbox"]');
     const totalDisplay = document.querySelector('#activities-cost');
    
@@ -198,29 +198,29 @@ window.addEventListener ('load', () => {
 
 // * * * * * * * * * * * * * * EXTRA CREDIT * * * * * * * * * * * * * *
 
-// Prevent users from registering for conflicting activities
-    for (let i=1; i<checkboxes.length; i++) {
-        checkboxes[i].addEventListener('change', (e) => {
-            let selectedActivity = e.target.parentElement;
-            let selectedBox = e.target;
-            let selectedTime = selectedActivity.querySelector('.activity-time').textContent;
-            for (let i=1; i<activities.length; i++) {
-                let activityTime = activities[i].querySelector('.activity-time').textContent;
-                let activityBox = activities[i].querySelector('input');
-                if (activities[i] !== selectedActivity) {
-                    if (selectedBox.checked == true){
+// Prevent users from registering for conflicting activities  
+    checkboxes.forEach(checkbox => checkbox.addEventListener('change', (e) => {
+        let selectedActivity = e.target.parentElement;
+        let selectedBox = e.target;
+        let selectedTime = selectedActivity.querySelector('.activity-time').textContent;
+        activities.forEach((activity, index) => {
+            if (index > 0) {
+                let activityTime = activity.querySelector('.activity-time').textContent;
+                let activityBox = activity.querySelector('input');
+                if (activity !== selectedActivity) {
+                    if (selectedBox.checked){
                         if (selectedTime == activityTime) {
-                            activities[i].classList.add('disabled');
+                            activity.classList.add('disabled');
                             activityBox.disabled = true;
                         }
                     } else {
-                        activities[i].classList.remove('disabled');
+                        activity.classList.remove('disabled');
                         activityBox.disabled = false;
                     }
-                }
+                }   
             }
         });
-    }
+    }));
     
 // Real-time error messages
     name.addEventListener('input', () => {
