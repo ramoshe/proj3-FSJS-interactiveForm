@@ -71,14 +71,10 @@ window.addEventListener ('load', () => {
     });
 
 // Accessibility - make focus states of "Activities" more obvious
-    for (let i=0; i<checkboxes.length; i++) {
-        checkboxes[i].addEventListener('focus', (e) => {
-            checkboxes[i].parentElement.className = 'focus';
-        })
-        checkboxes[i].addEventListener('blur', (e) => {
-            checkboxes[i].parentElement.removeAttribute('class', 'focus')
-        })
-    }
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('focus', () => checkbox.parentElement.classList.add('focus'));
+        checkbox.addEventListener('blur', () => checkbox.parentElement.classList.remove('focus'));
+    });
 
 // Update price in "Register for Activities" section
     let cost = 0;
