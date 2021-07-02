@@ -149,11 +149,7 @@ window.addEventListener ('load', () => {
     }
     function payIsValid() {
         if (payMethod.value == 'credit-card') {
-            if (cardIsValid() && zipIsValid() && cvvIsValid()) {
-                return true;
-            } else {
-                return false;
-            }
+            return (cardIsValid() && zipIsValid() && cvvIsValid());
         } else {
             return true;
         }
