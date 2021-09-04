@@ -2,9 +2,9 @@
  My third project for the Full-Stack JavaScript Techdegree program at Treehouse
 
 ## How To Use
- - You can view a live version of this project here: https://g.ramoshe.com/thp2-dataPagFilter/
+ - You can view a live version of this project here: https://g.ramoshe.com/thp3-interactiveForm/
  - If you want a local copy of the project:
-    1. Download the files: https://github.com/ramoshe/thp2-dataPagFilter/archive/refs/heads/main.zip
+    1. Download the files: https://github.com/ramoshe/thp3-interactiveForm/archive/refs/heads/main.zip
     2. Open the `index.html` file in your browser
 
 ## Project Description
